@@ -2,7 +2,7 @@ import { Ship } from "./Ship"
 export class GameBoard {
     readonly size: number;
     readonly maxShipCell: number;
-    private grid: (Ship | null)[][];
+    private grid: (Ship | null | 'hit' | 'miss')[][];
     private ships: Ship[];
 
     constructor (size: number = 10) {
@@ -61,5 +61,52 @@ export class GameBoard {
             }
         }
         return true;
+    }
+
+    placeShip(ship: Ship, x: number, y: number, orientation: 'horizontal' | 'vertical'): boolean {
+        if(!this.canPlaceShip(ship, x, y, orientation)) {
+            console.log("Can't place ship")
+            return false;
+        }
+        if (orientation === 'horizontal'){
+            for (let i=0; i<ship.size; i++) {
+                this.grid[y][x+i] = ship
+            }
+        }
+        if (orientation === 'vertical'){
+            for (let i=0; i<ship.size; i++) {
+                this.grid[y+i][x] = ship
+            }
+        }
+        this.ships.push(ship);
+        return true
+    }
+
+    receiveAttack(x: number, y:number): boolean {
+        if(x < 0 || y <0 || x >= this.size || y >= this.size) {
+            console.log("Initial coordinates are out of board!")
+            return false;
+        }
+        if(this.grid[y][x] === 'hit' || this.grid[y][x] === 'miss') {
+            console.log("Already shot. Try a diferent coordinate!")
+            return false;
+        }
+        if(this.grid[y][x] === null) {
+            console.log("You missed the shot!")
+            this.grid[y][x] = 'miss'
+            return false;
+        }
+        console.log("HIT!!")
+        const target = this.grid[y][x]
+        target.gotHit();
+        this.grid[y][x] = 'hit'
+        return true
+    }
+
+    areAllShipsSunk(ships: Ship): boolean {
+        ships.forEach(element => {
+            
+        });
+
     }
 }
