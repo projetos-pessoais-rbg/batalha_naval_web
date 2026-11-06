@@ -103,10 +103,17 @@ export class GameBoard {
         return true
     }
 
-    areAllShipsSunk(ships: Ship): boolean {
-        ships.forEach(element => {
-            
-        });
+    areAllShipsSunk(): boolean {
+        if (this.ships.length === 0) return false;
+        return this.ships.every((ship) => ship.hasSunk())
+    }
+
+
+    shotHistoric(x: number, y: number): boolean {
+        if(this.grid[y][x] === "hit" || this.grid[y][x] ==="miss") {
+            console.log("Tente outro lugar!")
+            return true;
+        } else { return false};
 
     }
 }
