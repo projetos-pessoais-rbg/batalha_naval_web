@@ -1,7 +1,7 @@
 import { GameBoard } from "./GameBoard";
 
 export class Player {
-    private name: string;
+    readonly name: string;
     readonly board: GameBoard;
     readonly type: ('human' | 'computer');
 
@@ -21,9 +21,9 @@ export class Player {
 
     getShotByAi(opponentBoard: GameBoard) {
         let coordinates = this.generateRandomCoordinate();
-        while (opponentBoard.shotHistoric(coordinates.y, coordinates.x)) {
+        while (opponentBoard.shotHistoric(coordinates.x, coordinates.y)) {
             coordinates = this.generateRandomCoordinate();
         }
-        return opponentBoard.receiveAttack(coordinates.y, coordinates.x)
+        return opponentBoard.receiveAttack(coordinates.x, coordinates.y)
     }
 }
