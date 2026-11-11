@@ -116,4 +116,11 @@ export class GameBoard {
         } else { return false};
 
     }
+
+    getCellState(x: number, y: number): 'empty' | 'hit' | 'miss' | 'ship' {
+        const cell = this.grid[y][x];
+        if (cell === null) return 'empty';
+        if (cell === 'hit' || cell === 'miss') return cell;
+        return 'ship';
+    }
 }

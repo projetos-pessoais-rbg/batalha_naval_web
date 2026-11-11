@@ -1,6 +1,8 @@
 import { GameBoard } from "./GameBoard";
 import { Player } from "./Player";
 
+export type TurnResult = 'repeated' | 'hit' | 'miss' | 'gameover';
+
 export class Game {
     private players: Player[]
     private turn: Player
@@ -23,19 +25,25 @@ export class Game {
         return this.players.find((p) => p !== this.turn)
     }
 
-    playTurn(x?: number, y?: number) {
+    getCurrentPlayer() {
+        return this.turn
+    }
+
+    playTurn(x?: number, y?: number): TurnResult {
         let adversary = this.getAdversary()
+        let hit: boolean
         if (!adversary) throw new Error("Could not determine adversary");
         if(this.turn.type === "human") {
-            if (adversary.board.shotHistoric(x, y) === true) return console.log("You already tried this coordinates!")
-            this.turn.tryShot(adversary.board, x, y)
+            if (x=== undefined || y=== undefined) throw new Error("You need to provide both coordinates");
+            if (adversary.board.shotHistoric(x, y) === true) return  'repeated';
+            hit = this.turn.tryShot(adversary.board, x, y)
         }
-        else { 
-            this.turn.getShotByAi(adversary.board)
+        else {
+            hit = this.turn.getShotByAi(adversary.board)
         }
-        if (this.checkGameStatus()){
-            return console.log(`Fim de jogo! ${this.turn.name} é o vencedor!`)
-        }
-        else return this.changeTurn()
+        if (this.checkGameStatus()) return 'gameover';
+
+        this.changeTurn();
+        return hit ? 'hit' : 'miss';
     }
 }

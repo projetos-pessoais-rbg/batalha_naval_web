@@ -1,4 +1,5 @@
 import { GameBoard } from "./GameBoard";
+import { randomCoordinates } from "../utils/random";
 
 export class Player {
     readonly name: string;
@@ -15,14 +16,10 @@ export class Player {
         return opponentBoard.receiveAttack(x, y);
     }
 
-    generateRandomCoordinate() {
-        return {x: Math.floor(Math.random()*this.board.size), y:Math.floor(Math.random()*this.board.size)}
-    }
-
     getShotByAi(opponentBoard: GameBoard) {
-        let coordinates = this.generateRandomCoordinate();
+        let coordinates = randomCoordinates(opponentBoard.size);
         while (opponentBoard.shotHistoric(coordinates.x, coordinates.y)) {
-            coordinates = this.generateRandomCoordinate();
+            coordinates = randomCoordinates(opponentBoard.size);
         }
         return opponentBoard.receiveAttack(coordinates.x, coordinates.y)
     }
